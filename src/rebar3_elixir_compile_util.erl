@@ -235,7 +235,10 @@ compile_libs(State, [App | Apps], AddToPath) ->
             rebar_utils:sh(Profile ++ Mix ++ "deps.get", [{cd, AppDir}, {use_stdout, true}]),
             rebar_utils:sh(Profile ++ Mix ++ "compile", [{cd, AppDir}, {use_stdout, true}]),
             LibsDir = libs_dir(AppDir, Env),
-            {ok, Libs} = file:list_dir_all(LibsDir),
+            Libs = case file:list_dir_all(LibsDir) of
+                { ok, L } -> L;
+                { error, Reason } -> error(Reason, [ LibsDir ])
+            end,
             transfer_libs(State, Libs, LibsDir);
         {_, true} ->
             transfer_libs(State, [App], filename:join(AppDir, "../"));
