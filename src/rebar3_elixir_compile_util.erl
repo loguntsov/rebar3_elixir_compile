@@ -237,7 +237,7 @@ compile_libs(State, [App | Apps], AddToPath) ->
             LibsDir = libs_dir(AppDir, Env),
             Libs = case file:list_dir_all(LibsDir) of
                 { ok, L } -> L;
-                { error, Reason } -> error(Reason, [ LibsDir ])
+                { error, Reason } -> error({ error, Reason [ LibsDir ]})
             end,
             transfer_libs(State, Libs, LibsDir);
         {_, true} ->
